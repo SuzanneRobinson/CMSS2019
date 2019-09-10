@@ -1,4 +1,4 @@
-""" Python Code to Solve the Linear Advection Equation using CTST
+""" Python Code to Solve the Linear Advection Equation using FTBS
 
 Setting initial conditions as a bell curve
 
@@ -17,7 +17,7 @@ def initialBell(x):
 
 def main ():
     # Setup space, initial phi (advection) profile and Courant number
-    nx = 40        # Number of points in space
+    nx = 80        # Number of points in space
     c = 0.2        # The Courant number 
     # Spatial variable going from zero to one inclusive 
     x = np.linspace(0.0, 1.0, nx+1)
@@ -39,13 +39,13 @@ def main ():
     # Loop over remaining time-steps (nt) using CTCS
     
     
-    nt = 40
+    nt = 80
     for n in range(1, nt):
         # loop over space
         for j in range(1, nx):
-            phiNew[j] = phiOld[j] - c*(phi[j+1] - phi[j-1])
+            phiNew[j] = phi[j] - c*(phi[j] - phi[j-1])
         # apply periodic boundary conditions 
-        phiNew[0] = phiOld[0] - c*(phi[1] - phi[nx-1])
+        phiNew[0] = phi[0] - c*(phi[0] - phi[nx-1])
         phiNew[nx] = phiNew[0]
         #update phi for the next timestep
         phiOld= phi.copy()
@@ -60,7 +60,7 @@ def main ():
     
     # Plot the solution in comparison to the analytic solution 
     plt.plot(x, initialBell(x- u*t), 'k', label='analytic')
-    plt.plot(x, phi, 'b', label='CTCS')
+    plt.plot(x, phi, 'b', label='FTBS')
     plt.legend(loc ='best')
     plt.ylabel('$\phi$')
     plt.axhline(0, linestyle= ':', color='black')
